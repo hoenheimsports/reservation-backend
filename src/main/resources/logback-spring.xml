@@ -1,0 +1,18 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+
+
+    <springProfile name="gcloud">
+        <appender name="CLOUD" class="com.google.cloud.logging.logback.LoggingAppender">
+            <log>Mes_logs</log>
+            <resourceType>gae_app</resourceType>
+            <projectId>reservation-frontend-384215</projectId>
+            <flushSeverity>INFO</flushSeverity>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CLOUD" />
+        </root>
+    </springProfile>
+</configuration>

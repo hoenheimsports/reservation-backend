@@ -2,10 +2,6 @@ package fr.hoenheimsports.reservation.model;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import org.hibernate.annotations.IdGeneratorType;
-
-import java.sql.Clob;
 import java.time.LocalDate;
 
 @Entity

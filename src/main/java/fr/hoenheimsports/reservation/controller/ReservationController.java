@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "https://reservation.hoenheimsports.club", "https://reservation-frontend-384215.web.app","https://reservation-frontend-384215.firebaseapp.com"})
+@CrossOrigin(origins = { "https://reservation.hoenheimsports.club", "https://reservation-frontend-384215.web.app","https://reservation-frontend-384215.firebaseapp.com"})
 public class ReservationController {
 
 
@@ -86,8 +86,6 @@ public class ReservationController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 
     @PostMapping("/reservation")
     public ResponseEntity<Map<String,String>> createReservation(@RequestBody FormReservationDTO formReservationDTO) {
