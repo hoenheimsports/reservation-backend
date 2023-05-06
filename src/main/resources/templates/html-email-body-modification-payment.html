@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="email-body">
+
+    <div class="alert" th:classappend="${nextState.equals('CANCELED')} ? 'alert-danger' :
+                (${nextState.equals('ACCEPTED')} ? 'alert-success' :
+                (${nextState.equals('PENDING')} ? 'alert-warning' :
+                (${nextState.equals('REFUND')} ? 'alert-info' : '')))" role="alert">
+        <h3 class="mb-0">L'état de votre paiement est passé de <em>[[${previousStateFrench}]]</em> à <em>[[${nextStateFrench}]]</em></h3>
+    </div>
+    <p>Vous pouvez retrouver à tous moments les details de votre réservation <a th:href="@{'https://reservation.hoenheimsports.club/reservation/ma-reservation/' + ${reservation.id}}">à cette endroit</a></p>
+    <div class="section-divider"></div>
+</div>
+</body>
+</html>

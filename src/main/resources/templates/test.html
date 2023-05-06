@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Confirmation de réservation - Soirée année 80</title>
+    <head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .row {
+      flex-wrap: wrap;
+      margin: -10px;
+    }
+
+    .col-md-12 {
+      flex: 0 0 100%;
+      max-width: 100%;
+      padding: 10px;
+    }
+
+    .my-4 {
+      margin-top: 1.5rem !important;
+      margin-bottom: 1.5rem !important;
+    }
+
+    .py-3 {
+      padding-top: 1rem !important;
+      padding-bottom: 1rem !important;
+    }
+
+    .py-4 {
+      padding-top: 1.5rem !important;
+      padding-bottom: 1.5rem !important;
+    }
+
+    .pb-6 {
+      padding-bottom: 4rem !important;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+    .text-uppercase {
+      text-transform: uppercase !important;
+    }
+
+    .text-info {
+      color: #17a2b8 !important;
+    }
+
+    .text-light {
+      color: #f8f9fa !important;
+    }
+
+    .text-decoration-underline {
+      text-decoration: underline !important;
+    }
+
+    .font-weight-bold {
+      font-weight: 700 !important;
+    }
+
+    .align-items-center {
+      align-items: center !important;
+    }
+
+    .rounded {
+      border-radius: 0.25rem !important;
+    }
+
+    .bg-primary {
+      background: radial-gradient(#7600bf 0%, transparent 70%), linear-gradient(#0b161e 40%, #202076 70%);
+    }
+
+    .bg-light-gray {
+      background-color: #f8f9fa;
+    }
+
+    .text-white {
+      color: #fff !important;
+    }
+
+    .alert {
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .alert-warning {
+        color: #856404;
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+    }
+
+    .alert-info {
+        color: #0c5460;
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+    }
+
+    .section-divider {
+      width: 100%;
+      border-top: 1px solid grey;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: #212529;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      padding: 0.75rem;
+      vertical-align: top;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .table thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody + tbody {
+      border-top: 2px solid #dee2e6;
+    }
+
+    .h5, h5 {
+      font-size: 1.25rem;
+    }
+
+    .mb-0 {
+      margin-bottom: 0 !important;
+    }
+
+    .mt-3 {
+        margin-top: 1rem !important;
+    }
+
+    .pl-3 {
+      padding-left: 1rem !important;
+    }
+
+    .mr-3 {
+      margin-right: 1rem !important;
+    }
+
+    img {
+      vertical-align: middle;
+      border-style: none;
+    }
+
+    hr {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border: 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .qrcode{
+        width: 120px;
+        height: auto;
+    }
+  </style>
+
+</head>
+<body>
+<div class="container">
+    <div id="email-header">
+    <div class="row align-items-center">
+        <div class="col-md-12 my-4 text-center">
+            <img
+                    src="https://reservation.hoenheimsports.club/assets/img/logo.png"
+                    alt="Logo"
+                    width="100"
+                    class="mr-3"
+            />
+            <h1 class="d-inline-block align-middle">Soirée année 80</h1>
+            <hr class="mx-auto" style="width: 60%; border-top: 2px solid gray"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 bg-primary pt-4 rounded">
+
+            <h2 class="text-white font-weight-bold">Bonjour,</h2>
+
+            <p class="text-white font-weight-bold pl-3">Une modification a été effectuée sur votre réservation ou paiement !</p>
+        </div>
+    </div>
+    <div class="section-divider"></div>
+</div>
+    <div class="row bg-light-gray py-3">
+        <div class="col-md-12">
+            <div id="email-body">
+
+    <div class="alert alert-success" role="alert">
+        <h3 class="mb-0">L'état de votre reservation est passé de <embed>En attente</embed> à <em>Accepté</em></h3>
+    </div>
+    <p>Vous pouvez retrouver à tous moments les details de votre réservation <a href="https://reservation.hoenheimsports.club/reservation/ma-reservation/SA85R0WOV">à cette endroit</a></p>
+    <div class="section-divider"></div>
+</div>
+        </div>
+    </div>
+    <div id="email-footer" class="row">
+    <div class="col-md-12 bg-primary py-4 rounded text-center">
+        <h3 class="text-white font-weight-bold text-uppercase">🎉 Rappel : Soirée année 80 🎉</h3>
+        <p class="text-light font-weight-bold h5 text-decoration-underline mb-0">
+            Salle des fêtes - 16a rue des Vosges - Hoenheim
+        </p>
+        <p class="text-white font-weight-bold">
+            <span class="text-info text-decoration-underline">Samedi 1 Juillet 2023</span> -
+            <span class="text-info text-decoration-underline">À partir de 18H30</span>
+        </p>
+        <p class="text-white font-weight-bold">
+            Il y aura des tartes flambées et une petite restauration sur place.
+        </p>
+        <p><a href="https://reservation.hoenheimsports.club">Lien vers le site de la soirée année 80</a></p>
+    </div>
+</div>
+</div>
+</body>
+</html>
+

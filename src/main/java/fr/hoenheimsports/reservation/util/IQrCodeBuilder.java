@@ -7,4 +7,5 @@ import java.io.IOException;
 public interface IQrCodeBuilder {
 
     public String createQrCodeBase64(String data) throws WriterException, IOException;
+    public byte[] createQrCode(String data) throws WriterException, IOException;
 }

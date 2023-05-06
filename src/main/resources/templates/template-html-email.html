@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Confirmation de réservation - Soirée année 80</title>
+    <th:block th:replace="~{head.html :: head}"></th:block>
+</head>
+<body>
+<div class="container">
+    <div th:replace="~{header.html :: #email-header}"></div>
+    <div class="row bg-light-gray py-3">
+        <div class="col-md-12">
+            <div th:replace="~{${bodyFile} :: #email-body}"></div>
+        </div>
+    </div>
+    <div th:replace="~{footer.html :: #email-footer}"></div>
+</div>
+</body>
+</html>

@@ -1,11 +1,64 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<html lang="fr">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<div id="email-body">
 
+            <h3>Détails de la commande :</h3>
+            <p><strong>Nom :</strong> [[${reservation.name}]]</p>
+            <p><strong>Numéro de réservation :</strong> [[${reservation.id}]]</p>
+            <p>
+                <strong>QR Code :</strong>
+                <img class="qrcode" th:src="@{'https://reservation-backend-384215.ew.r.appspot.com/qr-code/' + ${reservation.id}}" alt="QR Code"/>
+            </p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Nombre</th>
+                    <th>Prix unitaire</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Place(s) adulte(s)</td>
+                    <td>[[${reservation.nbrAdult}]]</td>
+                    <td>10 €</td>
+                </tr>
+                <tr>
+                    <td>Place(s) adolescent(s)</td>
+                    <td>[[${reservation.nbrTeen}]]</td>
+                    <td>5 €</td>
+                </tr>
+                <tr>
+                    <td>Place(s) enfant(s)</td>
+                    <td>[[${reservation.nbrKid}]]</td>
+                    <td>0 €</td>
+                </tr>
+                </tbody>
+            </table>
+            <p><strong>Prix total :</strong> <td>[[${reservation.payment.amount}]] €</td></p>
+    <div class="row mt-3">
+        <div class="col-md-12 my-3">
+            <div class="alert" th:classappend="${reservation.state.name().equals('CANCELED')} ? 'alert-danger' :
+                (${reservation.state.name().equals('ACCEPTED')} ? 'alert-success' :
+                (${reservation.state.name().equals('PENDING')} ? 'alert-warning' :
+                (${reservation.state.name().equals('ONGOING')} ? 'alert-info' : '')))" role="alert">
+                <h3 class="mb-0">État de la réservation : [[${reservation.state.getFrenchState()}]]</h3>
+            </div>
+            <div class="alert" th:classappend="${reservation.payment.paymentState.name().equals('CANCELED')} ? 'alert-danger' :
+                (${reservation.payment.paymentState.name().equals('ACCEPTED')} ? 'alert-success' :
+                (${reservation.payment.paymentState.name().equals('PENDING')} ? 'alert-warning' :
+                (${reservation.payment.paymentState.name().equals('REFUNDED')} ? 'alert-info' : '')))" role="alert">
+                <h3 class="mb-0">État du paiement : [[${reservation.payment.paymentState.getFrenchState()}]]</h3>
+            </div>
+        </div>
+    </div>
+    <p>Vous pouvez retrouver à tous moments les details de votre réservation <a th:href="@{'https://reservation.hoenheimsports.club/reservation/ma-reservation/' + ${reservation.id}}">à cette endroit</a></p>
+    <div class="section-divider"></div>
+</div>
 </body>
 </html>

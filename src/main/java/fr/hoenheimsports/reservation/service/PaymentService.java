@@ -36,32 +36,15 @@ public class PaymentService {
         Payment payment = reservation.getPayment();
         PaymentState previousState = payment.getPaymentState();
         payment.setPaymentState(nextState);
-        String messageToSend ;
-        if(previousState == null) {
-            messageToSend = templateEmailCreation.formatted(nextState.getFrenchState());
-        } else {
-            messageToSend = templateEmailModification.formatted(previousState.getFrenchState(),nextState.getFrenchState());
+
+        if (previousState != null)  {
+            this.emailService.generateHtmlBody("template-html-email", reservation,false, "bodyFile","html-email-body-modification-payment","previousState",previousState.name(),"nextState",nextState.name(),"previousStateFrench",previousState.getFrenchState(),"nextStateFrench",nextState.getFrenchState()).thenAccept(
+                    htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Changement d'état de votre paiement - Soirée année 80", htmlBody)
+            );
         }
-        this.emailService.sendEmail(reservation.getEmail(),"Changement d'état de votre paiement", messageToSend);
         logger.info("Modification du paiement " + payment.getId() + " de " + previousState + " à " + nextState);
         return payment;
     }
 
-
-    private final static String templateEmailCreation = """
-            Bonjour,
-            
-            Votre paiement a actuellement le status de %s.            
-            
-            Pour toutes questions sur la reservation, vous pouvez me joindre à reservation@hoenheimsports.fr
-            """;
-
-    private final static String templateEmailModification = """
-           Bonjour,
-           
-           Votre paiement a été modifié, il est passé du statue de %s à %s.       
-
-           Pour toutes questions sur la reservation, vous pouvez me joindre à reservation@hoenheimsports.fr
-            """;
 
 }

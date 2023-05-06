@@ -29,7 +29,6 @@ public class EmailService {
     }
    @Async
     public void sendEmail(String to, String subject, String htmlBody)  {
-
        try {
            logger.info("Envoie d'un email à " + to);
            MimeMessage message = mailSender.createMimeMessage();
@@ -62,7 +61,7 @@ public class EmailService {
     }
 
     @Async
-    public CompletableFuture<String> generateHtmlBody(String htmlTemplate, Reservation reservation, String... additionalVariable) {
+    public CompletableFuture<String> generateHtmlBody(String htmlTemplate, Reservation reservation,boolean isCreation, String... additionalVariable) {
         Context context = new Context();
 
         if (additionalVariable.length % 2 != 0) {
@@ -72,9 +71,11 @@ public class EmailService {
             String key = additionalVariable[i];
             String value = additionalVariable[i+1];
             context.setVariable(key,value);
-            // Faites quelque chose avec la paire de chaînes
-            System.out.println("Key: " + key + ", Value: " + value);
         }
+
+
+        context.setVariable("isCreation",isCreation);
+
 
         context.setVariable("reservation",reservation);
         return CompletableFuture.completedFuture(this.templateEngine.process(htmlTemplate,context));

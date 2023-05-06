@@ -1,5 +1,6 @@
 package fr.hoenheimsports.reservation.controller;
 
+import com.google.zxing.WriterException;
 import fr.hoenheimsports.reservation.controller.dto.FormCollectDTO;
 import fr.hoenheimsports.reservation.controller.dto.FormRefundDTO;
 import fr.hoenheimsports.reservation.controller.dto.FormReservationDTO;
@@ -7,19 +8,22 @@ import fr.hoenheimsports.reservation.exception.NotFoundException;
 import fr.hoenheimsports.reservation.model.Reservation;
 import fr.hoenheimsports.reservation.service.PaymentService;
 import fr.hoenheimsports.reservation.service.ReservationService;
+import fr.hoenheimsports.reservation.util.IQrCodeBuilder;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = { "https://reservation.hoenheimsports.club", "https://reservation-frontend-384215.web.app","https://reservation-frontend-384215.firebaseapp.com"})
 public class ReservationController {
 
 
     private ReservationService reservationService;
     private PaymentService paymentService;
+    private IQrCodeBuilder iQrCodeBuilder;
 
 
 
@@ -90,6 +94,12 @@ public class ReservationController {
     @PostMapping("/reservation")
     public ResponseEntity<Map<String,String>> createReservation(@RequestBody FormReservationDTO formReservationDTO) {
         return ResponseEntity.ok(Map.of("id",this.reservationService.createReservation(formReservationDTO)));
+    }
+
+    @GetMapping(value = "/qr-code/{id}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getQrCodeImage(@PathVariable("id") String id) throws IOException, WriterException {
+        String url = "https://reservation.hoenheimsports.club/reservation/ma-reservation${reservation.getId()}/validate";
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(this.iQrCodeBuilder.createQrCode(url));
     }
 
 }

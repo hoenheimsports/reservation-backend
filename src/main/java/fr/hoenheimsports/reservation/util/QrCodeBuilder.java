@@ -17,6 +17,11 @@ import java.util.Base64;
 public class QrCodeBuilder implements IQrCodeBuilder {
 
     public String createQrCodeBase64(String data) throws WriterException, IOException {
+
+        return Base64.getEncoder().encodeToString(this.createQrCode(data));
+    }
+
+    public byte[] createQrCode(String data) throws WriterException, IOException {
         BitMatrix bitMatrix = new QRCodeWriter().encode(data, BarcodeFormat.QR_CODE, 300, 300);
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
 
@@ -25,7 +30,7 @@ public class QrCodeBuilder implements IQrCodeBuilder {
         ImageIO.write(qrImage, "png", baos);
         byte[] bytes = baos.toByteArray();
 
-        return Base64.getEncoder().encodeToString(bytes);
+        return bytes;
     }
 
 }

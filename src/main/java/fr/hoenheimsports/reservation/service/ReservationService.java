@@ -115,36 +115,16 @@ public class ReservationService {
         ReservationState previousState = reservation.getState();
         reservation.setState(nextState);
         if (previousState == null) {
-            this.emailService.generateHtmlBody("html-email-body-creation", reservation).thenAccept(
-                    htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Changement d'état de votre réservation", htmlBody)
+            this.emailService.generateHtmlBody("template-html-email", reservation,true,"bodyFile","html-email-body-creation").thenAccept(
+                    htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Inscription soirée année 80", htmlBody)
             );
         } else {
-            this.emailService.generateHtmlBody("html-email-body-modification", reservation).thenAccept(
-                    htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Changement d'état de votre réservation", htmlBody)
+            this.emailService.generateHtmlBody("template-html-email", reservation,false, "bodyFile","html-email-body-modification","previousState",previousState.name(),"nextState",nextState.name(),"previousStateFrench",previousState.getFrenchState(),"nextStateFrench",nextState.getFrenchState()).thenAccept(
+                    htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Changement d'état de votre réservation - Soirée année 80", htmlBody)
             );
         }
 
         logger.info("Modification de la reservation " + reservation.getId() + " de " + previousState + " à " + nextState);
     }
 
-
-    private final static String templateEmailCreation = """
-            Bonjour,
-                        
-            Votre réservation a bien été enregistrée au nom de %s.
-                        
-            Vous pouvez retrouver votre reservation à https://reservation.hoenheimsports.club/reservation/ma-reservation/%s .
-                        
-            Pour toutes questions sur la reservation, vous pouvez me joindre à reservation@hoenheimsports.fr
-            """;
-
-    private final static String templateEmailModification = """
-            Bonjour,
-                       
-            Votre reservation au nom de %s a été modifiée, elle est passée du status de %s à %s.
-                       
-            Vous pouvez retrouver votre reservation à https://reservation.hoenheimsports.club/reservation/ma-reservation/%s .
-
-            Pour toutes questions sur la reservation, vous pouvez me joindre à reservation@hoenheimsports.fr
-             """;
 }

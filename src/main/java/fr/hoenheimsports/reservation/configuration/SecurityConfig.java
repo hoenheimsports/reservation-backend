@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -59,8 +60,16 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "X-Requested-With"));
         configuration.setAllowCredentials(true);
 
+        // Créez une nouvelle configuration CORS pour les URL /qr-code/{id}
+        CorsConfiguration qrCodeConfiguration = new CorsConfiguration();
+        qrCodeConfiguration.setAllowedOrigins(Collections.singletonList("*")); // Autoriser n'importe quelle origine
+        qrCodeConfiguration.setAllowedMethods(Collections.singletonList("GET")); // Autoriser uniquement les requêtes GET
+        qrCodeConfiguration.setAllowedHeaders(Collections.singletonList("Content-Type")); // Autoriser uniquement l'en-tête Content-Type
+        qrCodeConfiguration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/qr-code/**", qrCodeConfiguration);
 
         return source;
     }
