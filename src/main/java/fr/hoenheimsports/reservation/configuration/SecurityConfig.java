@@ -2,6 +2,7 @@ package fr.hoenheimsports.reservation.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,9 +41,10 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(
                         auth->auth
-                                .requestMatchers("/admin/*").authenticated()
-                                .requestMatchers("/login").authenticated()
-                                .anyRequest().permitAll()
+                                .requestMatchers("/qr-code/*").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/reservation").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/reservation/{id}").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf( csrf -> csrf.disable())

@@ -1,6 +1,5 @@
 package fr.hoenheimsports.reservation.controller;
 
-import com.google.zxing.WriterException;
 import fr.hoenheimsports.reservation.controller.dto.FormCollectDTO;
 import fr.hoenheimsports.reservation.controller.dto.FormRefundDTO;
 import fr.hoenheimsports.reservation.controller.dto.FormReservationDTO;
@@ -9,27 +8,30 @@ import fr.hoenheimsports.reservation.model.Reservation;
 import fr.hoenheimsports.reservation.service.PaymentService;
 import fr.hoenheimsports.reservation.service.ReservationService;
 import fr.hoenheimsports.reservation.util.IQrCodeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 public class ReservationController {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
     private ReservationService reservationService;
     private PaymentService paymentService;
     private IQrCodeBuilder iQrCodeBuilder;
 
 
 
-    public ReservationController(ReservationService reservationService, PaymentService paymentService) {
+    public ReservationController(ReservationService reservationService, PaymentService paymentService, IQrCodeBuilder iQrCodeBuilder) {
         this.reservationService = reservationService;
         this.paymentService = paymentService;
+        this.iQrCodeBuilder = iQrCodeBuilder;
     }
     @GetMapping("/reservation")
     public ResponseEntity<List<Reservation>> getAllReservation() {
@@ -96,10 +98,21 @@ public class ReservationController {
         return ResponseEntity.ok(Map.of("id",this.reservationService.createReservation(formReservationDTO)));
     }
 
+
     @GetMapping(value = "/qr-code/{id}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getQrCodeImage(@PathVariable("id") String id) throws IOException, WriterException {
-        String url = "https://reservation.hoenheimsports.club/reservation/ma-reservation${reservation.getId()}/validate";
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(this.iQrCodeBuilder.createQrCode(url));
+    public ResponseEntity<byte[]> getQrCodeImage(@PathVariable("id") String id) {
+        try {
+            logger.info("création d'un QR Code pour " + id);
+            String qrCodeBase64 = this.reservationService.findById(id).getQrCodeBase64();
+            byte[] qrCode = Base64.getDecoder().decode(qrCodeBase64);
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(qrCode);
+        } catch (NotFoundException e) {
+            logger.warn("création d'un QR Code  : Utilisateur inconnu");
+            return ResponseEntity.notFound().build();
+        } catch (Exception e){
+            logger.warn("création d'un QR Code  : Erreur |- " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

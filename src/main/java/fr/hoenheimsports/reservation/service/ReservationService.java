@@ -38,7 +38,10 @@ public class ReservationService {
     }
 
     public String createReservation(FormReservationDTO FormReservationDTO) {
+
+
         Reservation reservation = new Reservation(this.idReservationGenerator.generateId(6));
+        logger.info("Creation d'une reservation pour : " + reservation.getId());
         reservation.setName(FormReservationDTO.name());
         reservation.setEmail(FormReservationDTO.email());
         reservation.setCreateDate(LocalDate.now());
@@ -48,10 +51,11 @@ public class ReservationService {
         reservation.setNbrKid(FormReservationDTO.nbrKid());
         reservation.setNbrMeal(FormReservationDTO.nbrMeal());
         reservation.setComments(FormReservationDTO.comments());
-        String urlValidate = "https://reservation.hoenheimsports.club/reservation/ma-reservation${reservation.getId()}/validate";
+        String urlValidate = "https://reservation.hoenheimsports.club/reservation/${reservation.getId()}/validate";
         try {
             reservation.setQrCodeBase64(this.QrCodeBuilder.createQrCodeBase64(urlValidate));
         } catch (Exception e) {
+            logger.warn("La création du qr code n'a pas reussi |- " + e.getMessage() );
             reservation.setQrCodeBase64(null);
         }
         Payment payment = switch (FormReservationDTO.payment().type()) {
@@ -76,6 +80,7 @@ public class ReservationService {
     }
 
     public Reservation collect(String id, String name) throws NotFoundException {
+        logger.info("La reservation " + id + " a été payée et récupérée par " + name);
         Reservation reservation = this.findById(id);
         Payment payment = this.paymentService.modifyState(reservation, PaymentState.ACCEPTED);
         reservation.setPayment(payment);
@@ -91,6 +96,7 @@ public class ReservationService {
     }
 
     public Reservation refund(String id, String name) throws NotFoundException {
+        logger.info("La reservation " + id + " a été remboursée et récupérée par " + name);
         Reservation reservation = this.findById(id);
         Payment payment = this.paymentService.modifyState(reservation, PaymentState.REFUNDED);
         reservation.setPayment(payment);
@@ -100,14 +106,21 @@ public class ReservationService {
     }
 
     public Reservation cancel(String id) throws NotFoundException {
+        logger.info("La reservation " + id + " a été annulée");
         Reservation reservation = this.findById(id);
         reservation.setState(ReservationState.CANCELED);
         return this.reservationRepository.save(reservation);
     }
 
     public Reservation validate(String id) throws NotFoundException {
+
         Reservation reservation = this.findById(id);
-        this.modifyState(reservation, ReservationState.ONGOING);
+        if(reservation.getState() == ReservationState.ACCEPTED) {
+            logger.info("La reservation " + id + " a été validée");
+            this.modifyState(reservation, ReservationState.ONGOING);
+        } else{
+            logger.warn("La reservation " + id + " n'a pas été validée à cause de son état non accepté |- ETAT :" + reservation.getState());
+        }
         return this.reservationRepository.save(reservation);
     }
 
