@@ -51,7 +51,7 @@ public class ReservationService {
         reservation.setNbrKid(FormReservationDTO.nbrKid());
         reservation.setNbrMeal(FormReservationDTO.nbrMeal());
         reservation.setComments(FormReservationDTO.comments());
-        String urlValidate = "https://reservation.hoenheimsports.club/reservation/${reservation.getId()}/validate";
+        String urlValidate = "https://reservation.hoenheimsports.club/reservation/"+reservation.getId()+"/validate";
         try {
             reservation.setQrCodeBase64(this.QrCodeBuilder.createQrCodeBase64(urlValidate));
         } catch (Exception e) {
