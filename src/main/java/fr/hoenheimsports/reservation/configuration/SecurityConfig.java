@@ -29,7 +29,7 @@ public class SecurityConfig {
 
 
         UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder.encode("admin"))
+                .password(passwordEncoder.encode("p84sMcb3j7DE9Q"))
                 .authorities("ADMIN")
                 .build();
 
