@@ -5,6 +5,7 @@ import fr.hoenheimsports.reservation.controller.dto.FormRefundDTO;
 import fr.hoenheimsports.reservation.controller.dto.FormReservationDTO;
 import fr.hoenheimsports.reservation.exception.NotFoundException;
 import fr.hoenheimsports.reservation.model.Reservation;
+import fr.hoenheimsports.reservation.service.EmailService;
 import fr.hoenheimsports.reservation.service.PaymentService;
 import fr.hoenheimsports.reservation.service.ReservationService;
 import fr.hoenheimsports.reservation.util.IQrCodeBuilder;
@@ -23,13 +24,16 @@ public class ReservationController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
     private ReservationService reservationService;
+
+    private EmailService emailService;
     private PaymentService paymentService;
     private IQrCodeBuilder iQrCodeBuilder;
 
 
 
-    public ReservationController(ReservationService reservationService, PaymentService paymentService, IQrCodeBuilder iQrCodeBuilder) {
+    public ReservationController(ReservationService reservationService, EmailService emailService, PaymentService paymentService, IQrCodeBuilder iQrCodeBuilder) {
         this.reservationService = reservationService;
+        this.emailService = emailService;
         this.paymentService = paymentService;
         this.iQrCodeBuilder = iQrCodeBuilder;
     }
@@ -73,9 +77,9 @@ public class ReservationController {
 
     @PutMapping("/reservation/{id}/refund")
     public ResponseEntity<Reservation> refund(@PathVariable String id, @RequestBody FormRefundDTO formCollectDTO) {
-        Reservation reservation = null;
+
         try {
-            reservation = this.reservationService.refund(id,formCollectDTO.name());
+            Reservation reservation = this.reservationService.refund(id,formCollectDTO.name());
             return ResponseEntity.ok(reservation);
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -84,10 +88,23 @@ public class ReservationController {
 
     @GetMapping("/reservation/{id}/validate")
     public ResponseEntity<Reservation> validate(@PathVariable String id) {
-        Reservation reservation = null;
+
         try {
-            reservation = this.reservationService.validate(id);
+            Reservation reservation = this.reservationService.validate(id);
             return ResponseEntity.ok(reservation);
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/reservation/{id}/resend")
+    public ResponseEntity<Void> reSendConfirmationEmail(@PathVariable String id) {
+        try {
+            Reservation reservation = this.reservationService.validate(id);
+            this.emailService.generateHtmlBody("template-html-email", reservation,true,"bodyFile","html-email-body-creation").thenAccept(
+                    htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Inscription soirée année 80", htmlBody)
+            );
+            return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -114,5 +131,7 @@ public class ReservationController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
 
 }
