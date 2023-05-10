@@ -6,58 +6,89 @@
 </head>
 <body>
 <div id="email-body">
-
-            <h3>Détails de la commande :</h3>
-            <p><strong>Nom :</strong> [[${reservation.name}]]</p>
-            <p><strong>Numéro de réservation :</strong> [[${reservation.id}]]</p>
-            <p>
-                <strong>QR Code :</strong>
-                <img class="qrcode" th:src="@{'https://reservation-backend-384215.ew.r.appspot.com/qr-code/' + ${reservation.id}}" alt="QR Code"/>
-            </p>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Nombre</th>
-                    <th>Prix unitaire</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Place(s) adulte(s)</td>
-                    <td>[[${reservation.nbrAdult}]]</td>
-                    <td>10 €</td>
-                </tr>
-                <tr>
-                    <td>Place(s) adolescent(s)</td>
-                    <td>[[${reservation.nbrTeen}]]</td>
-                    <td>5 €</td>
-                </tr>
-                <tr>
-                    <td>Place(s) enfant(s)</td>
-                    <td>[[${reservation.nbrKid}]]</td>
-                    <td>0 €</td>
-                </tr>
-                </tbody>
-            </table>
-            <p><strong>Prix total :</strong> <td>[[${reservation.payment.amount}]] €</td></p>
+    <div class="alert alert-danger">Votre réservations ne sera acceptée qu'après le règlement complet et dans la limite
+        des places disponibles.
+    </div>
+    <h3>Détails de la commande :</h3>
+    <p><strong>Nom :</strong> [[${reservation.name}]]</p>
+    <p><strong>Numéro de réservation :</strong> [[${reservation.id}]]</p>
+    <p>
+        <strong>QR Code :</strong>
+        <img class="qrcode"
+             th:src="@{'https://reservation-backend-384215.ew.r.appspot.com/qr-code/' + ${reservation.id}}"
+             alt="QR Code"/>
+    </p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>Nombre</th>
+            <th>Prix unitaire</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Place(s) adulte(s)</td>
+            <td>[[${reservation.nbrAdult}]]</td>
+            <td>10 €</td>
+        </tr>
+        <tr>
+            <td>Place(s) adolescent(s)</td>
+            <td>[[${reservation.nbrTeen}]]</td>
+            <td>5 €</td>
+        </tr>
+        <tr>
+            <td>Place(s) enfant(s)</td>
+            <td>[[${reservation.nbrKid}]]</td>
+            <td>0 €</td>
+        </tr>
+        </tbody>
+    </table>
+    <p><strong>Prix total :</strong>
+    <td>[[${reservation.payment.amount}]] €</td>
+    </p>
     <div class="row mt-3">
         <div class="col-md-12 my-3">
             <div class="alert" th:classappend="${reservation.state.name().equals('CANCELED')} ? 'alert-danger' :
                 (${reservation.state.name().equals('ACCEPTED')} ? 'alert-success' :
                 (${reservation.state.name().equals('PENDING')} ? 'alert-warning' :
-                (${reservation.state.name().equals('ONGOING')} ? 'alert-info' : '')))" role="alert">
+                (${reservation.state.name().equals('ONGOING')} ? 'alert-info' : 'alert-dark')))" role="alert">
                 <h3 class="mb-0">État de la réservation : [[${reservation.state.getFrenchState()}]]</h3>
             </div>
             <div class="alert" th:classappend="${reservation.payment.paymentState.name().equals('CANCELED')} ? 'alert-danger' :
                 (${reservation.payment.paymentState.name().equals('ACCEPTED')} ? 'alert-success' :
                 (${reservation.payment.paymentState.name().equals('PENDING')} ? 'alert-warning' :
-                (${reservation.payment.paymentState.name().equals('REFUNDED')} ? 'alert-info' : '')))" role="alert">
+                (${reservation.payment.paymentState.name().equals('REFUNDED')} ? 'alert-info' : 'alert-dark')))"
+                 role="alert">
                 <h3 class="mb-0">État du paiement : [[${reservation.payment.paymentState.getFrenchState()}]]</h3>
             </div>
         </div>
     </div>
-    <p>Vous pouvez retrouver à tout moment les details de votre réservation <a th:href="@{'https://reservation.hoenheimsports.club/info'}">à ce lien</a></p>
+    <p>Vous pouvez retrouver à tout moment les infos <a th:href="@{'https://reservation.hoenheimsports.club/info'}">à ce
+        lien</a></p>
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+        <tr>
+            <td align="center">
+                Vous trouverez les dernières infos sur nos réseaux
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="https://fb.me/e/SSBPyODB" class="facebook-button">
+                    Soirée année 80
+                    <img width="32" src="https://static.xx.fbcdn.net/rsrc.php/v3/yc/r/I92GqZOkKcu.png" height="32" style="border:0" >
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="https://www.instagram.com/as_hoenheim_sports/" class="instagram-button">
+                    <img height="30" src="https://static.xx.fbcdn.net/rsrc.php/v3/yO/r/Otjcwa2eCOF.png" style="border:0">
+                </a>
+            </td>
+        </tr>
+    </table>
+
     <div class="section-divider"></div>
 </div>
 </body>

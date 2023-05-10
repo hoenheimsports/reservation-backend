@@ -50,6 +50,7 @@ public class ReservationController {
             reservation = this.reservationService.findById(id);
             return ResponseEntity.ok(reservation);
         } catch (NotFoundException e) {
+            logger.warn("@GetMapping/reservation/{id} : la reservation "+ id  + " n'a pas été trouvé");
             return ResponseEntity.notFound().build();
         }
     }
@@ -61,6 +62,7 @@ public class ReservationController {
             reservation = this.reservationService.collect(id,formCollectDTO.name());
             return ResponseEntity.ok(reservation);
         } catch (NotFoundException e) {
+            logger.warn(" @PutMapping /reservation/{id}/collect : la reservation "+ id  + " n'a pas été trouvé");
             return ResponseEntity.notFound().build();
         }
     }
@@ -72,6 +74,7 @@ public class ReservationController {
             reservation = this.reservationService.cancel(id);
             return ResponseEntity.ok(reservation);
         } catch (NotFoundException e) {
+            logger.warn(" @GetMapping /reservation/{id}/cancel : la reservation "+ id  + " n'a pas été trouvé");
             return ResponseEntity.notFound().build();
         }
     }
@@ -83,6 +86,7 @@ public class ReservationController {
             Reservation reservation = this.reservationService.refund(id,formCollectDTO.name());
             return ResponseEntity.ok(reservation);
         } catch (NotFoundException e) {
+            logger.warn(" @PutMapping /reservation/{id}/refund : la reservation "+ id  + " n'a pas été trouvé");
             return ResponseEntity.notFound().build();
         }
     }
@@ -94,6 +98,7 @@ public class ReservationController {
             Reservation reservation = this.reservationService.validate(id);
             return ResponseEntity.ok(reservation);
         } catch (NotFoundException e) {
+            logger.warn(" @GetMapping /reservation/{id}/validate : la reservation "+ id  + " n'a pas été trouvé");
             return ResponseEntity.notFound().build();
         }
     }
@@ -101,12 +106,13 @@ public class ReservationController {
     @GetMapping("/reservation/{id}/resend")
     public ResponseEntity<Void> reSendConfirmationEmail(@PathVariable String id) {
         try {
-            Reservation reservation = this.reservationService.validate(id);
+            Reservation reservation = this.reservationService.findById(id);
             this.emailService.generateHtmlBody("template-html-email", reservation,true,"bodyFile","html-email-body-creation").thenAccept(
                     htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Inscription soirée année 80", htmlBody)
             );
             return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
+            logger.warn(" @GetMapping /reservation/{id}/resend : la reservation "+ id  + " n'a pas été trouvé");
             return ResponseEntity.notFound().build();
         }
     }

@@ -194,6 +194,62 @@
         width: 120px;
         height: auto;
     }
+    .facebook-button, .instagram-button {
+        text-align: center;
+        /* ... Reste de vos styles ... */
+    }
+    .social-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center !important;
+        text-align: center !important;
+        justify-content: space-evenly !important;
+    }
+
+    .facebook-button {
+        display: inline-block;
+        align-items: center !important;
+        justify-content: center;
+        background-color: #0978ea;
+        color: white !important;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-family: Arial, sans-serif;
+        transition: box-shadow 0.3s ease;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+        margin: 10px 0; /* Ajout de marge en haut et en bas pour séparer les boutons */
+    }
+
+    .facebook-button:hover {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .facebook-button:active {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .facebook-button img {
+        margin-left: 10px;
+    }
+
+    .instagram-button {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+        color: white !important;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-family: Arial, sans-serif;
+        margin: 10px 0; /* Ajout de marge en haut et en bas pour séparer les boutons */
+    }
+
+    .instagram-button:hover {
+        background: linear-gradient(45deg, #4e69e0, #665bdf, #9444c0, #cc408e, #e54176, #ff2e2e);
+    }
+
+
   </style>
 </th:block>
 
