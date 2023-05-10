@@ -3,6 +3,7 @@ package fr.hoenheimsports.reservation.controller;
 import fr.hoenheimsports.reservation.controller.dto.FormCollectDTO;
 import fr.hoenheimsports.reservation.controller.dto.FormRefundDTO;
 import fr.hoenheimsports.reservation.controller.dto.FormReservationDTO;
+import fr.hoenheimsports.reservation.controller.dto.StatistiqueDTO;
 import fr.hoenheimsports.reservation.exception.NotFoundException;
 import fr.hoenheimsports.reservation.model.Reservation;
 import fr.hoenheimsports.reservation.service.EmailService;
@@ -108,6 +109,11 @@ public class ReservationController {
         } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/reservation/stat")
+    public ResponseEntity<StatistiqueDTO> statistique(){
+        return ResponseEntity.ok(this.reservationService.getStat());
     }
 
     @PostMapping("/reservation")

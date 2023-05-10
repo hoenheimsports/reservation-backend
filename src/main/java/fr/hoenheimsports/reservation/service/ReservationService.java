@@ -1,6 +1,6 @@
 package fr.hoenheimsports.reservation.service;
 
-import fr.hoenheimsports.reservation.controller.dto.FormReservationDTO;
+import fr.hoenheimsports.reservation.controller.dto.*;
 import fr.hoenheimsports.reservation.exception.NotFoundException;
 import fr.hoenheimsports.reservation.model.*;
 import fr.hoenheimsports.reservation.repository.ReservationRepository;
@@ -38,8 +38,6 @@ public class ReservationService {
     }
 
     public String createReservation(FormReservationDTO FormReservationDTO) {
-
-
         Reservation reservation = new Reservation(this.idReservationGenerator.generateId(6));
         logger.info("Creation d'une reservation pour : " + reservation.getId());
         reservation.setName(FormReservationDTO.name());
@@ -122,6 +120,37 @@ public class ReservationService {
             logger.warn("La reservation " + id + " n'a pas été validée à cause de son état non accepté |- ETAT :" + reservation.getState());
         }
         return this.reservationRepository.save(reservation);
+    }
+
+    public StatistiqueDTO getStat() {
+
+        StatAdultDTO statAdultDTO = new StatAdultDTO(
+                this.reservationRepository.sumNbrAdultByReservationState(ReservationState.PENDING),
+                this.reservationRepository.sumNbrAdultByReservationState(ReservationState.CANCELED),
+                this.reservationRepository.sumNbrAdultByReservationState(ReservationState.ACCEPTED),
+                this.reservationRepository.sumNbrAdultByReservationState(ReservationState.ONGOING)
+        );
+        StatTeenDTO statTeenDTO = new StatTeenDTO(
+                this.reservationRepository.sumNbrTeenByReservationState(ReservationState.PENDING),
+                this.reservationRepository.sumNbrTeenByReservationState(ReservationState.CANCELED),
+                this.reservationRepository.sumNbrTeenByReservationState(ReservationState.ACCEPTED),
+                this.reservationRepository.sumNbrTeenByReservationState(ReservationState.ONGOING)
+        );
+        StatKidDTO statKidDTO = new StatKidDTO(
+                this.reservationRepository.sumNbrKidByReservationState(ReservationState.PENDING),
+                this.reservationRepository.sumNbrKidByReservationState(ReservationState.CANCELED),
+                this.reservationRepository.sumNbrKidByReservationState(ReservationState.ACCEPTED),
+                this.reservationRepository.sumNbrKidByReservationState(ReservationState.ONGOING)
+        );
+
+        StatistiqueDTO statistiqueDTO = new StatistiqueDTO(
+                this.reservationRepository.sumAmountByPendingOrOngoingReservationStates(ReservationState.ACCEPTED,ReservationState.ONGOING),
+                statAdultDTO,
+                statTeenDTO,
+                statKidDTO
+        );
+
+        return statistiqueDTO;
     }
 
     private void modifyState(Reservation reservation, ReservationState nextState) {
