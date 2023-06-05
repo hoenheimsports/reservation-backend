@@ -22,7 +22,7 @@
         <div class="col-md-12 bg-primary pt-4 rounded">
 
             <h2 class="text-white font-weight-bold">Bonjour,</h2>
-
+            <p class="text-white font-weight-bold pl-3">Cette email concerne la reservation <span class="text-decoration-underline">[[${reservation.id}]]</span> de <span class="text-decoration-underline">[[${reservation.name}]]</span> </p>
             <p class="text-white font-weight-bold pl-3" th:text="${isCreation} ?
             'Nous sommes heureux de vous informer que votre réservation a bien été enregistrée pour la soirée année 80.'
             : 'Une modification a été effectuée sur votre réservation ou paiement !'"></p>

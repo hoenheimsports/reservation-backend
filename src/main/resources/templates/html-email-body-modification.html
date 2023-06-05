@@ -14,6 +14,7 @@
                 (${nextState.equals('ONGOING')} ? 'alert-info' : '')))" role="alert">
         <h3 class="mb-0">L'état de votre reservation est passé de <em>[[${previousStateFrench}]]</em> à <em>[[${nextStateFrench}]]</em></h3>
     </div>
+    <p th:if="${nextState.equals('CANCELED')}">Cause de l'annulation : [[${reservation.cancelMessage}]] </p>
     <p>Vous pouvez retrouver à tout moment les details de votre réservation <a th:href="@{'https://reservation.hoenheimsports.club/reservation/ma-reservation/' + ${reservation.id}}">à ce lien</a></p>
     <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
         <tr>

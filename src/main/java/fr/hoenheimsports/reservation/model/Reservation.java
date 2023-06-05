@@ -22,6 +22,8 @@ public class Reservation {
     @Lob
     private String qrCodeBase64;
 
+    private String cancelMessage;
+
     public String getId() {
         return id;
     }
@@ -131,5 +133,13 @@ public class Reservation {
 
     public void setQrCodeBase64(String qrCodeBase64) {
         this.qrCodeBase64 = qrCodeBase64;
+    }
+
+    public String getCancelMessage() {
+        return cancelMessage;
+    }
+
+    public void setCancelMessage(String cancelMessage) {
+        this.cancelMessage = cancelMessage;
     }
 }

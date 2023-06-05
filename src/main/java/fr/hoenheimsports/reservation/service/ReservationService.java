@@ -98,15 +98,15 @@ public class ReservationService {
         Reservation reservation = this.findById(id);
         Payment payment = this.paymentService.modifyState(reservation, PaymentState.REFUNDED);
         reservation.setPayment(payment);
-        this.modifyState(reservation, ReservationState.CANCELED);
         reservation.getPayment().setPersonWhoRefundPayment(name);
         return this.reservationRepository.save(reservation);
     }
 
-    public Reservation cancel(String id) throws NotFoundException {
-        logger.info("La reservation " + id + " a été annulée");
+    public Reservation cancel(String id, String message) throws NotFoundException {
+        logger.info("La reservation " + id + " a été annulée à cause de : " + message);
         Reservation reservation = this.findById(id);
-        reservation.setState(ReservationState.CANCELED);
+        reservation.setCancelMessage(message);
+        this.modifyState(reservation, ReservationState.CANCELED);
         return this.reservationRepository.save(reservation);
     }
 
@@ -155,18 +155,22 @@ public class ReservationService {
 
     private void modifyState(Reservation reservation, ReservationState nextState) {
         ReservationState previousState = reservation.getState();
-        reservation.setState(nextState);
-        if (previousState == null) {
-            this.emailService.generateHtmlBody("template-html-email", reservation,true,"bodyFile","html-email-body-creation").thenAccept(
-                    htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Inscription soirée année 80", htmlBody)
-            );
-        } else {
-            this.emailService.generateHtmlBody("template-html-email", reservation,false, "bodyFile","html-email-body-modification","previousState",previousState.name(),"nextState",nextState.name(),"previousStateFrench",previousState.getFrenchState(),"nextStateFrench",nextState.getFrenchState()).thenAccept(
-                    htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Changement d'état de votre réservation - Soirée année 80", htmlBody)
-            );
-        }
+        if(!previousState.equals(nextState)) {
+            reservation.setState(nextState);
+            if (previousState == null) {
+                this.emailService.generateHtmlBody("template-html-email", reservation, true, "bodyFile", "html-email-body-creation").thenAccept(
+                        htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Inscription soirée année 80", htmlBody)
+                );
+            } else {
+                this.emailService.generateHtmlBody("template-html-email", reservation, false, "bodyFile", "html-email-body-modification", "previousState", previousState.name(), "nextState", nextState.name(), "previousStateFrench", previousState.getFrenchState(), "nextStateFrench", nextState.getFrenchState()).thenAccept(
+                        htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Changement d'état de votre réservation - Soirée année 80", htmlBody)
+                );
+            }
 
-        logger.info("Modification de la reservation " + reservation.getId() + " de " + previousState + " à " + nextState);
+            logger.info("Modification de la reservation " + reservation.getId() + " de " + previousState + " à " + nextState);
+        } else {
+            logger.warn("L'etat final et initial était le même.");
+        }
     }
 
 }

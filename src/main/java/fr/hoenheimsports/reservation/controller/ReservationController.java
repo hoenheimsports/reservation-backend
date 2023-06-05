@@ -1,9 +1,6 @@
 package fr.hoenheimsports.reservation.controller;
 
-import fr.hoenheimsports.reservation.controller.dto.FormCollectDTO;
-import fr.hoenheimsports.reservation.controller.dto.FormRefundDTO;
-import fr.hoenheimsports.reservation.controller.dto.FormReservationDTO;
-import fr.hoenheimsports.reservation.controller.dto.StatistiqueDTO;
+import fr.hoenheimsports.reservation.controller.dto.*;
 import fr.hoenheimsports.reservation.exception.NotFoundException;
 import fr.hoenheimsports.reservation.model.Reservation;
 import fr.hoenheimsports.reservation.service.EmailService;
@@ -67,11 +64,15 @@ public class ReservationController {
         }
     }
 
-    @GetMapping("/reservation/{id}/cancel")
-    public ResponseEntity<Reservation> refund(@PathVariable String id) {
+    @PutMapping("/reservation/{id}/cancel")
+    public ResponseEntity<Reservation> cancel(@PathVariable String id,@RequestBody FormCancelDTO formCancelDTO) {
         Reservation reservation = null;
         try {
-            reservation = this.reservationService.cancel(id);
+            String message = null;
+            if(!formCancelDTO.message().isEmpty() && !formCancelDTO.message().equals("")) {
+                message = formCancelDTO.message();
+            }
+            reservation = this.reservationService.cancel(id,message);
             return ResponseEntity.ok(reservation);
         } catch (NotFoundException e) {
             logger.warn(" @GetMapping /reservation/{id}/cancel : la reservation "+ id  + " n'a pas été trouvé");
