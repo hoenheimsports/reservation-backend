@@ -155,21 +155,24 @@ public class ReservationService {
 
     private void modifyState(Reservation reservation, ReservationState nextState) {
         ReservationState previousState = reservation.getState();
-        if(!previousState.equals(nextState)) {
+        if(previousState != null && !previousState.equals(nextState)) {
             reservation.setState(nextState);
-            if (previousState == null) {
-                this.emailService.generateHtmlBody("template-html-email", reservation, true, "bodyFile", "html-email-body-creation").thenAccept(
-                        htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Inscription soirée année 80", htmlBody)
-                );
-            } else {
+
                 this.emailService.generateHtmlBody("template-html-email", reservation, false, "bodyFile", "html-email-body-modification", "previousState", previousState.name(), "nextState", nextState.name(), "previousStateFrench", previousState.getFrenchState(), "nextStateFrench", nextState.getFrenchState()).thenAccept(
                         htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Changement d'état de votre réservation - Soirée année 80", htmlBody)
                 );
-            }
+
 
             logger.info("Modification de la reservation " + reservation.getId() + " de " + previousState + " à " + nextState);
         } else {
             logger.warn("L'etat final et initial était le même.");
+        }
+        if (previousState == null) {
+            reservation.setState(nextState);
+            this.emailService.generateHtmlBody("template-html-email", reservation, true, "bodyFile", "html-email-body-creation").thenAccept(
+                    htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Inscription soirée année 80", htmlBody)
+            );
+            logger.info("Init Reservation status");
         }
     }
 

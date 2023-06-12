@@ -36,16 +36,20 @@ public class PaymentService {
     public Payment modifyState(Reservation reservation, PaymentState nextState) {
         Payment payment = reservation.getPayment();
         PaymentState previousState = payment.getPaymentState();
-        if (!previousState.equals(nextState)) {
+        if (previousState != null && !previousState.equals(nextState)) {
             payment.setPaymentState(nextState);
-            if (previousState != null) {
+
                 this.emailService.generateHtmlBody("template-html-email", reservation, false, "bodyFile", "html-email-body-modification-payment", "previousState", previousState.name(), "nextState", nextState.name(), "previousStateFrench", previousState.getFrenchState(), "nextStateFrench", nextState.getFrenchState()).thenAccept(
                         htmlBody -> this.emailService.sendEmail(reservation.getEmail(), "Changement d'état de votre paiement - Soirée année 80", htmlBody)
                 );
-            }
+
             logger.info("Modification du paiement " + payment.getId() + " de " + previousState + " à " + nextState);
         } else {
             logger.warn("L'etat final et initial était le même.");
+        }
+        if(previousState == null) {
+            payment.setPaymentState(nextState);
+            logger.info("Init payment status");
         }
         return payment;
     }
