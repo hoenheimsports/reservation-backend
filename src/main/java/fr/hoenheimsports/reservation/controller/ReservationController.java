@@ -1,7 +1,7 @@
 package fr.hoenheimsports.reservation.controller;
 
 import fr.hoenheimsports.reservation.controller.dto.*;
-import fr.hoenheimsports.reservation.exception.NotFoundException;
+import fr.hoenheimsports.reservation.repository.exception.NotFoundException;
 import fr.hoenheimsports.reservation.model.Reservation;
 import fr.hoenheimsports.reservation.service.EmailService;
 import fr.hoenheimsports.reservation.service.PaymentService;

@@ -1,7 +1,7 @@
 package fr.hoenheimsports.reservation.service;
 
 import fr.hoenheimsports.reservation.controller.dto.*;
-import fr.hoenheimsports.reservation.exception.NotFoundException;
+import fr.hoenheimsports.reservation.repository.exception.NotFoundException;
 import fr.hoenheimsports.reservation.model.*;
 import fr.hoenheimsports.reservation.repository.ReservationRepository;
 import fr.hoenheimsports.reservation.util.IQrCodeBuilder;
@@ -113,11 +113,11 @@ public class ReservationService {
     public Reservation validate(String id) throws NotFoundException {
 
         Reservation reservation = this.findById(id);
-        if(reservation.getState() == ReservationState.ACCEPTED) {
+        if(reservation.getState() == ReservationState.ACCEPTED && reservation.getPayment().getPaymentState() == PaymentState.ACCEPTED) {
             logger.info("La reservation " + id + " a été validée");
             this.modifyState(reservation, ReservationState.ONGOING);
         } else{
-            logger.warn("La reservation " + id + " n'a pas été validée à cause de son état non accepté |- ETAT :" + reservation.getState());
+            logger.warn("La reservation " + id + " n'a pas été validée à cause de son état non accepté |- ETAT RESERVATION :" + reservation.getState() + " - ETAT PAYMENT : " + reservation.getPayment().getPaymentState());
         }
         return this.reservationRepository.save(reservation);
     }
